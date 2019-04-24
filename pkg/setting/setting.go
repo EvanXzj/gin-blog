@@ -37,7 +37,6 @@ func init() {
 	loadBase()
 	loadServer()
 	loadApp()
-	// loadDatabase() ?
 }
 
 func loadBase() {
