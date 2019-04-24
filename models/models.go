@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/EvanXzj/gin-blog/pkg/setting"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
+
+	"github.com/EvanXzj/gin-blog/pkg/setting"
 )
 
 var db *gorm.DB

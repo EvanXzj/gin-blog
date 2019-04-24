@@ -1,0 +1,4 @@
+获取标签列表: GET("/tags")
+新建标签: POST("/tags")
+更新指定标签: PUT("/tags/:id")
+删除指定标签: DELETE("/tags/:id")
