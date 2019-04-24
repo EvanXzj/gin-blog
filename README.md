@@ -6,14 +6,33 @@
 ## Folder Structure
 
 ```js
-gin-blog/
+.
+├── README.md
 ├── conf
-├── middleware
+│   └── app.ini
+├── main.go
+├── middlewares
 ├── models
+│   ├── article.go
+│   ├── models.go
+│   └── tag.go
 ├── pkg
-│   └── setting
-│       └── setting.go  // 加载配置信息
+│   ├── cerror
+│   │   ├── code.go
+│   │   └── msg.go
+│   ├── setting
+│   │   └── setting.go
+│   └── util
+│       └── pagination.go
+├── resources
+│   ├── api.v1
+│   └── db.sql
 ├── routers
+│   ├── api
+│   │   └── v1
+│   │       ├── article.go
+│   │       └── tag.go
+│   └── router.go
 └── runtime
 ```
 
@@ -23,3 +42,4 @@ gin-blog/
 - pkg：第三方包
 - routers 路由逻辑处理
 - runtime 应用运行时数据
+- resources 一些资源文件
