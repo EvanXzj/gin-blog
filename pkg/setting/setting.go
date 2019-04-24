@@ -8,15 +8,22 @@ import (
 )
 
 var (
+	// Cfg Config File
 	Cfg *ini.File
 
+	// RunMode app run mode
 	RunMode string
 
-	HTTPPort     int
-	ReadTimeout  time.Duration
+	// HTTPPort http port
+	HTTPPort int
+	// ReadTimeout read timeout duration
+	ReadTimeout time.Duration
+	// WriteTimeout write timeout duration
 	WriteTimeout time.Duration
-	PageSize     int
-	JwtSecret    string
+	// PageSize defautl pagesize
+	PageSize int
+	// JwtSecret jwt verify secret
+	JwtSecret string
 )
 
 // load config
