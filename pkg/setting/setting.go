@@ -44,9 +44,9 @@ func loadBase() {
 }
 
 func loadServer() {
-	sec, err := Cfg.GetSection("Server")
+	sec, err := Cfg.GetSection("server")
 	if err != nil {
-		log.Fatal(2, "Fail to get section 'server': %v", err)
+		log.Fatal(2, " Fail to get section 'server': ", err)
 	}
 
 	HTTPPort = sec.Key("HTTP_PORT").MustInt(3000)
