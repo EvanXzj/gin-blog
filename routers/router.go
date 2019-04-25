@@ -6,6 +6,11 @@ import (
 	"github.com/EvanXzj/gin-blog/routers/api"
 	v1 "github.com/EvanXzj/gin-blog/routers/api/v1"
 	"github.com/gin-gonic/gin"
+
+	_ "github.com/EvanXzj/gin-blog/docs"
+
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 // InitRouter initiate routers
@@ -17,6 +22,7 @@ func InitRouter() *gin.Engine {
 
 	gin.SetMode(setting.RunMode)
 
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.GET("/auth", api.GetAuth)
 
 	apiv1 := r.Group("/api/v1")
