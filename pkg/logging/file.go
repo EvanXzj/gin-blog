@@ -22,7 +22,7 @@ func getLogFileFullPath() string {
 	prefixPath := getLogFilePath()
 	suffixPath := fmt.Sprintf("%s%s.%s", LogSaveName, time.Now().Format(TimeFormat), LogSaveExt)
 
-	return fmt.Sprintf("s%s%", prefixPath, suffixPath)
+	return fmt.Sprintf("%s%s", prefixPath, suffixPath)
 }
 
 func openLogFile(filePath string) *os.File {
@@ -31,7 +31,7 @@ func openLogFile(filePath string) *os.File {
 	case os.IsNotExist(err):
 		mkDir()
 	case os.IsPermission(err):
-		log.Fatalf("Permission: v%", err)
+		log.Fatalf("Permission: %v ", err)
 	}
 
 	hanler, err := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)

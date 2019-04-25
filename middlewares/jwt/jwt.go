@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/EvanXzj/gin-blog/pkg/logging"
+
 	"github.com/EvanXzj/gin-blog/pkg/cerror"
 	"github.com/EvanXzj/gin-blog/pkg/util"
 	"github.com/gin-gonic/gin"
@@ -29,6 +31,7 @@ func JWT() gin.HandlerFunc {
 		}
 
 		if code != cerror.SUCCESS {
+			logging.Info(cerror.GetMsg(code))
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"code": code,
 				"msg":  cerror.GetMsg(code),

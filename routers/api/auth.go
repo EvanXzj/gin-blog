@@ -1,10 +1,10 @@
 package api
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/EvanXzj/gin-blog/models"
+	"github.com/EvanXzj/gin-blog/pkg/logging"
 	"github.com/EvanXzj/gin-blog/pkg/util"
 
 	"github.com/EvanXzj/gin-blog/pkg/cerror"
@@ -43,7 +43,7 @@ func GetAuth(c *gin.Context) {
 		}
 	} else {
 		for _, err := range valid.Errors {
-			log.Println(err.Key, err.Message)
+			logging.Info(err.Key, err.Message)
 		}
 	}
 
