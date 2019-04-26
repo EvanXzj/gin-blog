@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -36,7 +37,10 @@ func init() {
 	dbName = sec.Key("DB_NAME").String()
 	user = sec.Key("USER").String()
 	password = sec.Key("PASSWORD").String()
-	host = sec.Key("HOST").String()
+	host = os.Getenv("DBHOST")
+	if host == "" {
+		host = sec.Key("HOST").String()
+	}
 	tablePrefix = sec.Key("TABLE_PREFIX").String()
 
 	// get db
