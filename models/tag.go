@@ -2,9 +2,6 @@ package models
 
 import (
 	"fmt"
-	"time"
-
-	"github.com/jinzhu/gorm"
 )
 
 type Tag struct {
@@ -16,17 +13,17 @@ type Tag struct {
 	State      int    `json:"state"`
 }
 
-func (tag *Tag) BeforeCreate(scope *gorm.Scope) error {
-	scope.SetColumn("CreatedOn", time.Now().Unix())
+// func (tag *Tag) BeforeCreate(scope *gorm.Scope) error {
+// 	scope.SetColumn("CreatedOn", time.Now().Unix())
 
-	return nil
-}
+// 	return nil
+// }
 
-func (tag *Tag) BeforeUpdate(scope *gorm.Scope) error {
-	scope.SetColumn("ModifiedOn", time.Now().Unix())
+// func (tag *Tag) BeforeUpdate(scope *gorm.Scope) error {
+// 	scope.SetColumn("ModifiedOn", time.Now().Unix())
 
-	return nil
-}
+// 	return nil
+// }
 
 func GetTags(offset int, pageSize int, conditions interface{}) (tags []Tag) {
 	db.Where(conditions).Offset(offset).Limit(pageSize).Find(&tags)
