@@ -3,7 +3,6 @@ package models
 import (
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -22,33 +21,14 @@ type Model struct {
 	DeletedOn  int `josn:"deleted_on"`
 }
 
-func init() {
-	var (
-		err                                                error
-		dialect, dbName, user, password, host, tablePrefix string
-	)
-
-	sec, err := setting.Cfg.GetSection("database")
-	if err != nil {
-		log.Fatal(2, "Fail to get section 'database': v%", err)
-	}
-
-	dialect = sec.Key("DIALECT").String()
-	dbName = sec.Key("DB_NAME").String()
-	user = sec.Key("USER").String()
-	password = sec.Key("PASSWORD").String()
-	host = os.Getenv("DBHOST")
-	if host == "" {
-		host = sec.Key("HOST").String()
-	}
-	tablePrefix = sec.Key("TABLE_PREFIX").String()
-
+func Setup() {
+	var err error
 	// get db
-	db, err = gorm.Open(dialect, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
-		user,
-		password,
-		host,
-		dbName,
+	db, err = gorm.Open(setting.DatabaseSetting.Dialect, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		setting.DatabaseSetting.User,
+		setting.DatabaseSetting.Password,
+		setting.DatabaseSetting.Host,
+		setting.DatabaseSetting.Name,
 	))
 
 	if err != nil {
@@ -56,7 +36,7 @@ func init() {
 	}
 
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
-		return tablePrefix + defaultTableName
+		return setting.DatabaseSetting.TablePrefix + defaultTableName
 	}
 
 	db.SingularTable(true)
