@@ -20,7 +20,7 @@ func GetExt(filename string) string {
 }
 
 // CheckExist checks src exist or not
-func CheckExist(src string) bool {
+func CheckNotExist(src string) bool {
 	_, err := os.Stat(src)
 
 	return os.IsNotExist(err)
@@ -41,7 +41,7 @@ func MkDir(src string) error {
 
 // IsNotExistMkdir checks src is not exist and creates a directory named src
 func IsNotExistMkdir(src string) error {
-	if exist := CheckExist(src); !exist {
+	if notExist := CheckNotExist(src); notExist {
 		if err := MkDir(src); err != nil {
 			return err
 		}

@@ -14,7 +14,7 @@ type App struct {
 	RuntimeRootPath string
 
 	ImagePrefixUrl string
-	ImgageSavePath string
+	ImageSavePath  string
 	ImageMaxSize   int
 	ImageAllowExts []string
 

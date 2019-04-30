@@ -16,12 +16,12 @@ import (
 	"github.com/EvanXzj/gin-blog/pkg/util"
 )
 
-// GetImagePath 获取图片路径
+// GetImagePath 获取图片存储路径
 func GetImagePath() string {
-	return setting.AppSetting.ImgageSavePath
+	return setting.AppSetting.ImageSavePath
 }
 
-// GetImageName 获取图片名称
+// GetImageName 获取图片加密后的名称
 func GetImageName(name string) string {
 	ext := path.Ext(name)
 	fileName := strings.TrimSuffix(name, ext)
@@ -35,7 +35,7 @@ func GetImageFullUrl(name string) string {
 	return setting.AppSetting.ImagePrefixUrl + "/" + GetImagePath() + name
 }
 
-// GetImageFullPath 获取图片的完整路径
+// GetImageFullPath 获取图片的完整存储目录
 func GetImageFullPath() string {
 	return setting.AppSetting.RuntimeRootPath + GetImagePath()
 }
