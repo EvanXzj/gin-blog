@@ -6,7 +6,7 @@ import (
 	"github.com/astaxie/beego/validation"
 
 	"github.com/EvanXzj/gin-blog/models"
-	"github.com/EvanXzj/gin-blog/pkg/cerror"
+	"github.com/EvanXzj/gin-blog/pkg/e"
 	"github.com/EvanXzj/gin-blog/pkg/logging"
 	"github.com/EvanXzj/gin-blog/pkg/setting"
 	"github.com/EvanXzj/gin-blog/pkg/util"
@@ -31,14 +31,14 @@ func GetTags(c *gin.Context) {
 		maps["state"] = state
 	}
 
-	code := cerror.SUCCESS
+	code := e.SUCCESS
 
 	data["lists"] = models.GetTags(util.GetOffset(c), setting.AppSetting.PageSize, maps)
 	data["total"] = models.GetTagTotal(maps)
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
-		"msg":  cerror.GetMsg(code),
+		"msg":  e.GetMsg(code),
 		"data": data,
 	})
 }
@@ -63,13 +63,13 @@ func AddTag(c *gin.Context) {
 	valid.MaxSize(name, 100, "name").Message("名称最长为100字符")
 	valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
 
-	code := cerror.INVALID_PARAMS
+	code := e.INVALID_PARAMS
 	if !valid.HasErrors() {
 		if !models.ExistTagByName(name) {
-			code = cerror.SUCCESS
+			code = e.SUCCESS
 			models.AddTag(name, state, createdBy)
 		} else {
-			code = cerror.ERROR_EXIST_TAG
+			code = e.ERROR_EXIST_TAG
 		}
 	} else {
 		for _, err := range valid.Errors {
@@ -79,7 +79,7 @@ func AddTag(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
-		"msg":  cerror.GetMsg(code),
+		"msg":  e.GetMsg(code),
 		"data": make(map[string]string),
 	})
 }
@@ -109,9 +109,9 @@ func EditTag(c *gin.Context) {
 	valid.MaxSize(modifiedBy, 100, "modified_by").Message("修改人最长为100字符")
 	valid.MaxSize(name, 100, "name").Message("名称最长为100字符")
 
-	code := cerror.INVALID_PARAMS
+	code := e.INVALID_PARAMS
 	if !valid.HasErrors() {
-		code = cerror.SUCCESS
+		code = e.SUCCESS
 		if models.ExistTagByID(id) {
 			data := make(map[string]interface{})
 			data["modified_by"] = modifiedBy
@@ -124,7 +124,7 @@ func EditTag(c *gin.Context) {
 
 			models.EditTag(id, data)
 		} else {
-			code = cerror.ERROR_NOT_EXIST_TAG
+			code = e.ERROR_NOT_EXIST_TAG
 		}
 	} else {
 		for _, err := range valid.Errors {
@@ -134,7 +134,7 @@ func EditTag(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
-		"msg":  cerror.GetMsg(code),
+		"msg":  e.GetMsg(code),
 		"data": make(map[string]string),
 	})
 }
@@ -146,13 +146,13 @@ func DeleteTag(c *gin.Context) {
 	valid := validation.Validation{}
 	valid.Min(id, 1, "id").Message("ID必须大于0")
 
-	code := cerror.INVALID_PARAMS
+	code := e.INVALID_PARAMS
 	if !valid.HasErrors() {
-		code = cerror.SUCCESS
+		code = e.SUCCESS
 		if models.ExistTagByID(id) {
 			models.DeleteTag(id)
 		} else {
-			code = cerror.ERROR_NOT_EXIST_TAG
+			code = e.ERROR_NOT_EXIST_TAG
 		}
 	} else {
 		for _, err := range valid.Errors {
@@ -162,7 +162,7 @@ func DeleteTag(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
-		"msg":  cerror.GetMsg(code),
+		"msg":  e.GetMsg(code),
 		"data": make(map[string]string),
 	})
 }

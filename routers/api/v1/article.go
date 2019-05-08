@@ -9,7 +9,7 @@ import (
 
 	"github.com/EvanXzj/gin-blog/models"
 
-	"github.com/EvanXzj/gin-blog/pkg/cerror"
+	"github.com/EvanXzj/gin-blog/pkg/e"
 	"github.com/Unknwon/com"
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
@@ -22,14 +22,14 @@ func GetArticle(c *gin.Context) {
 	valid := validation.Validation{}
 	valid.Min(id, 1, "id").Message("ID必须大于0")
 
-	code := cerror.INVALID_PARAMS
+	code := e.INVALID_PARAMS
 	var data interface{}
 	if !valid.HasErrors() {
 		if models.ExistArticleByID(id) {
 			data = models.GetArticle(id)
-			code = cerror.SUCCESS
+			code = e.SUCCESS
 		} else {
-			code = cerror.ERROR_NOT_EXIST_ARTICLE
+			code = e.ERROR_NOT_EXIST_ARTICLE
 		}
 	} else {
 		for _, err := range valid.Errors {
@@ -39,7 +39,7 @@ func GetArticle(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
-		"msg":  cerror.GetMsg(code),
+		"msg":  e.GetMsg(code),
 		"data": data,
 	})
 }
@@ -58,9 +58,9 @@ func GetArticles(c *gin.Context) {
 		valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
 	}
 
-	code := cerror.INVALID_PARAMS
+	code := e.INVALID_PARAMS
 	if !valid.HasErrors() {
-		code = cerror.SUCCESS
+		code = e.SUCCESS
 		data["list"] = models.GetArticles(util.GetOffset(c), setting.AppSetting.PageSize, maps)
 		data["total"] = models.GetArticleTotal(maps)
 	} else {
@@ -71,7 +71,7 @@ func GetArticles(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
-		"msg":  cerror.GetMsg(code),
+		"msg":  e.GetMsg(code),
 		"data": data,
 	})
 }
@@ -96,7 +96,7 @@ func AddArticle(c *gin.Context) {
 	valid.Required(coverImageUrl, "cover_image_url").Message("cover_image_url 非空")
 	valid.MaxSize(coverImageUrl, 255, "cover_image_url").Message("cover_image_url 最长为255字符")
 
-	code := cerror.INVALID_PARAMS
+	code := e.INVALID_PARAMS
 	if !valid.HasErrors() {
 		if models.ExistTagByID(tagId) {
 			data := make(map[string]interface{})
@@ -109,9 +109,9 @@ func AddArticle(c *gin.Context) {
 			data["cover_image_url"] = coverImageUrl
 
 			models.AddArticle(data)
-			code = cerror.SUCCESS
+			code = e.SUCCESS
 		} else {
-			code = cerror.ERROR_NOT_EXIST_TAG
+			code = e.ERROR_NOT_EXIST_TAG
 		}
 	} else {
 		for _, err := range valid.Errors {
@@ -121,7 +121,7 @@ func AddArticle(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
-		"msg":  cerror.GetMsg(code),
+		"msg":  e.GetMsg(code),
 		"data": make(map[string]interface{}),
 	})
 }
@@ -153,7 +153,7 @@ func EditArticle(c *gin.Context) {
 	valid.Required(coverImageUrl, "cover_image_url").Message("cover_image_url 非空")
 	valid.MaxSize(coverImageUrl, 255, "cover_image_url").Message("cover_image_url 最长为255字符")
 
-	code := cerror.INVALID_PARAMS
+	code := e.INVALID_PARAMS
 	if !valid.HasErrors() {
 		if models.ExistArticleByID(id) {
 			if models.ExistTagByID(tagId) {
@@ -177,12 +177,12 @@ func EditArticle(c *gin.Context) {
 				data["modified_by"] = modifiedBy
 
 				models.EditArticle(id, data)
-				code = cerror.SUCCESS
+				code = e.SUCCESS
 			} else {
-				code = cerror.ERROR_NOT_EXIST_TAG
+				code = e.ERROR_NOT_EXIST_TAG
 			}
 		} else {
-			code = cerror.ERROR_NOT_EXIST_ARTICLE
+			code = e.ERROR_NOT_EXIST_ARTICLE
 		}
 	} else {
 		for _, err := range valid.Errors {
@@ -192,7 +192,7 @@ func EditArticle(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
-		"msg":  cerror.GetMsg(code),
+		"msg":  e.GetMsg(code),
 		"data": make(map[string]string),
 	})
 }
@@ -204,13 +204,13 @@ func DeleteArticle(c *gin.Context) {
 	valid := validation.Validation{}
 	valid.Min(id, 1, "id").Message("ID必须大于0")
 
-	code := cerror.INVALID_PARAMS
+	code := e.INVALID_PARAMS
 	if !valid.HasErrors() {
 		if models.ExistArticleByID(id) {
 			models.DeleteArticle(id)
-			code = cerror.SUCCESS
+			code = e.SUCCESS
 		} else {
-			code = cerror.ERROR_NOT_EXIST_ARTICLE
+			code = e.ERROR_NOT_EXIST_ARTICLE
 		}
 	} else {
 		for _, err := range valid.Errors {
@@ -220,7 +220,7 @@ func DeleteArticle(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
-		"msg":  cerror.GetMsg(code),
+		"msg":  e.GetMsg(code),
 		"data": make(map[string]string),
 	})
 }

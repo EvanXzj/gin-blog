@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/EvanXzj/gin-blog/pkg/cerror"
+	"github.com/EvanXzj/gin-blog/pkg/e"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,7 +12,7 @@ type Gin struct {
 func (g *Gin) Response(httpCode, errCode int, data interface{}) {
 	g.C.JSON(httpCode, gin.H{
 		"code": httpCode,
-		"msg":  cerror.GetMsg(errCode),
+		"msg":  e.GetMsg(errCode),
 		"data": data,
 	})
 

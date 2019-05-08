@@ -6,7 +6,7 @@ import (
 
 	"github.com/EvanXzj/gin-blog/pkg/logging"
 
-	"github.com/EvanXzj/gin-blog/pkg/cerror"
+	"github.com/EvanXzj/gin-blog/pkg/e"
 	"github.com/EvanXzj/gin-blog/pkg/util"
 	"github.com/gin-gonic/gin"
 )
@@ -17,24 +17,24 @@ func JWT() gin.HandlerFunc {
 		var code int
 		var data interface{}
 
-		code = cerror.SUCCESS
+		code = e.SUCCESS
 		token := c.Query("token")
 		if token == "" {
-			code = cerror.INVALID_PARAMS
+			code = e.INVALID_PARAMS
 		} else {
 			claims, err := util.ParseToken(token)
 			if err != nil {
-				code = cerror.ERROR_AUTH_CHECK_TOKEN_FAIL
+				code = e.ERROR_AUTH_CHECK_TOKEN_FAIL
 			} else if time.Now().Unix() > claims.ExpiresAt {
-				code = cerror.ERROR_AUTH_CHECK_TOKEN_TIMEOUT
+				code = e.ERROR_AUTH_CHECK_TOKEN_TIMEOUT
 			}
 		}
 
-		if code != cerror.SUCCESS {
-			logging.Info(cerror.GetMsg(code))
+		if code != e.SUCCESS {
+			logging.Info(e.GetMsg(code))
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"code": code,
-				"msg":  cerror.GetMsg(code),
+				"msg":  e.GetMsg(code),
 				"data": data,
 			})
 

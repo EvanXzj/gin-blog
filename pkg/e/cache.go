@@ -1,5 +1,5 @@
 // Cache prefix
-package cerror
+package e
 
 const (
 	CACHE_ARTICLE = "ARTICLE"

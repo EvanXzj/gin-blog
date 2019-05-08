@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/EvanXzj/gin-blog/pkg/cerror"
+	"github.com/EvanXzj/gin-blog/pkg/e"
 )
 
 type Tag struct {
@@ -18,7 +18,7 @@ type Tag struct {
 
 func (t *Tag) GetTagsKey() string {
 	keys := []string{
-		cerror.CACHE_TAG,
+		e.CACHE_TAG,
 		"LIST",
 	}
 

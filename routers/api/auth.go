@@ -7,7 +7,7 @@ import (
 	"github.com/EvanXzj/gin-blog/pkg/logging"
 	"github.com/EvanXzj/gin-blog/pkg/util"
 
-	"github.com/EvanXzj/gin-blog/pkg/cerror"
+	"github.com/EvanXzj/gin-blog/pkg/e"
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
 )
@@ -26,20 +26,20 @@ func GetAuth(c *gin.Context) {
 	ok, _ := valid.Valid(&a)
 
 	data := make(map[string]interface{})
-	code := cerror.INVALID_PARAMS
+	code := e.INVALID_PARAMS
 
 	if ok {
 		isExist := models.CheckAuth(username, password)
 		if isExist {
 			token, err := util.GenerateToken(username, password)
 			if err != nil {
-				code = cerror.ERROR_AUTH_TOKEN
+				code = e.ERROR_AUTH_TOKEN
 			} else {
 				data["token"] = token
-				code = cerror.SUCCESS
+				code = e.SUCCESS
 			}
 		} else {
-			code = cerror.ERROR_AUTH
+			code = e.ERROR_AUTH
 		}
 	} else {
 		for _, err := range valid.Errors {
@@ -49,7 +49,7 @@ func GetAuth(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
-		"msg":  cerror.GetMsg(code),
+		"msg":  e.GetMsg(code),
 		"data": data,
 	})
 }

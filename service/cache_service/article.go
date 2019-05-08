@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/EvanXzj/gin-blog/pkg/cerror"
+	"github.com/EvanXzj/gin-blog/pkg/e"
 )
 
 type Article struct {
@@ -17,12 +17,12 @@ type Article struct {
 }
 
 func (a *Article) GetArticleKey() string {
-	return cerror.CACHE_ARTICLE + "_" + strconv.Itoa(a.ID)
+	return e.CACHE_ARTICLE + "_" + strconv.Itoa(a.ID)
 }
 
 func (a *Article) GetArticlesKey() string {
 	keys := []string{
-		cerror.CACHE_ARTICLE,
+		e.CACHE_ARTICLE,
 		"LIST",
 	}
 

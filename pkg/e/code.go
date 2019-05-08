@@ -1,5 +1,5 @@
-// Package cerror is a customed error package
-package cerror
+// Package e is a customed error package
+package e
 
 const (
 	SUCCESS        = 200
