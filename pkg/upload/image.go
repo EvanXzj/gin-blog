@@ -8,20 +8,18 @@ import (
 	"path"
 	"strings"
 
-	"github.com/EvanXzj/gin-blog/pkg/logging"
-
 	"github.com/EvanXzj/gin-blog/pkg/file"
-
+	"github.com/EvanXzj/gin-blog/pkg/logging"
 	"github.com/EvanXzj/gin-blog/pkg/setting"
 	"github.com/EvanXzj/gin-blog/pkg/util"
 )
 
-// GetImagePath 获取图片存储路径
-func GetImagePath() string {
-	return setting.AppSetting.ImageSavePath
+// GetImageFullUrl get the full access path
+func GetImageFullUrl(name string) string {
+	return setting.AppSetting.PrefixUrl + "/" + GetImagePath() + name
 }
 
-// GetImageName 获取图片加密后的名称
+// GetImageName get image name
 func GetImageName(name string) string {
 	ext := path.Ext(name)
 	fileName := strings.TrimSuffix(name, ext)
@@ -30,17 +28,17 @@ func GetImageName(name string) string {
 	return fileName + ext
 }
 
-// GetImageFullUrl 获取图片完整URL
-func GetImageFullUrl(name string) string {
-	return setting.AppSetting.PrefixUrl + "/" + GetImagePath() + name
+// GetImagePath get image save path
+func GetImagePath() string {
+	return setting.AppSetting.ImageSavePath
 }
 
-// GetImageFullPath 获取图片的完整存储目录
+// GetImageFullPath get image full save path
 func GetImageFullPath() string {
 	return setting.AppSetting.RuntimeRootPath + GetImagePath()
 }
 
-// CheckImageExt checks image extension
+// CheckImageExt check image file ext is valid
 func CheckImageExt(filename string) bool {
 	ext := file.GetExt(filename)
 	for _, allowExt := range setting.AppSetting.ImageAllowExts {
@@ -64,7 +62,7 @@ func CheckImageSize(f multipart.File) bool {
 	return size <= setting.AppSetting.ImageMaxSize
 }
 
-// CheckImage checks image state
+// CheckImage check if the image file exists
 func CheckImage(src string) error {
 	dir, err := os.Getwd()
 	if err != nil {
