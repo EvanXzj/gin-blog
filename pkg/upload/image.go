@@ -32,7 +32,7 @@ func GetImageName(name string) string {
 
 // GetImageFullUrl 获取图片完整URL
 func GetImageFullUrl(name string) string {
-	return setting.AppSetting.ImagePrefixUrl + "/" + GetImagePath() + name
+	return setting.AppSetting.PrefixUrl + "/" + GetImagePath() + name
 }
 
 // GetImageFullPath 获取图片的完整存储目录
