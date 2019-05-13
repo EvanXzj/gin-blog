@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+
+	"github.com/EvanXzj/gin-blog/pkg/file"
 )
 
 type Level int
@@ -21,6 +23,7 @@ var (
 	levelFlags = []string{"DEBUG", "INFO", "WARNING", "ERROR", "FATAL"}
 )
 
+// log level
 const (
 	DEBUG Level = iota
 	INFO
@@ -29,18 +32,50 @@ const (
 	FATAL
 )
 
+// Setup initialize the log instance
 func Setup() {
 	var err error
 	filePath := getLogFilePath()
 	fileName := getLogFileName()
-	F, err = openLogFile(fileName, filePath)
+	F, err = file.MustOpen(fileName, filePath)
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalf("logging.Setup err: %v", err)
 	}
 
 	logger = log.New(F, DefaultPrefix, log.LstdFlags)
 }
 
+// Debug output logs at debug level
+func Debug(v ...interface{}) {
+	setPrefix(DEBUG)
+	logger.Println(v)
+}
+
+// Info output logs at info level
+func Info(v ...interface{}) {
+	setPrefix(INFO)
+	logger.Println(v)
+}
+
+// Warn output logs at warn level
+func Warn(v ...interface{}) {
+	setPrefix(WARNING)
+	logger.Println(v)
+}
+
+// Error output logs at error level
+func Error(v ...interface{}) {
+	setPrefix(ERROR)
+	logger.Println(v)
+}
+
+// Fatal output logs at fatal level
+func Fatal(v ...interface{}) {
+	setPrefix(FATAL)
+	logger.Fatalln(v)
+}
+
+// setPrefix set the prefix of the log output
 func setPrefix(level Level) {
 	_, file, line, ok := runtime.Caller(DefaultCallerDepath)
 	if ok {
@@ -50,29 +85,4 @@ func setPrefix(level Level) {
 	}
 
 	logger.SetPrefix(logPrefix)
-}
-
-func Debug(v ...interface{}) {
-	setPrefix(DEBUG)
-	logger.Println(v)
-}
-
-func Info(v ...interface{}) {
-	setPrefix(INFO)
-	logger.Println(v)
-}
-
-func Warn(v ...interface{}) {
-	setPrefix(WARNING)
-	logger.Println(v)
-}
-
-func Error(v ...interface{}) {
-	setPrefix(ERROR)
-	logger.Println(v)
-}
-
-func Fatal(v ...interface{}) {
-	setPrefix(FATAL)
-	logger.Fatalln(v)
 }
