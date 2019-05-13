@@ -5,6 +5,7 @@ import (
 	"github.com/astaxie/beego/validation"
 )
 
+// MarkErrors logs error log
 func MarkErrors(errors []*validation.Error) {
 	for _, err := range errors {
 		logging.Info(err.Key, err.Message)
