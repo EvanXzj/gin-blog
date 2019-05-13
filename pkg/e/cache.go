@@ -1,4 +1,3 @@
-// Cache prefix
 package e
 
 const (
