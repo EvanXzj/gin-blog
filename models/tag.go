@@ -1,11 +1,10 @@
 package models
 
 import (
-	"fmt"
-
 	"github.com/jinzhu/gorm"
 )
 
+// Tag struct
 type Tag struct {
 	Model
 
@@ -13,6 +12,35 @@ type Tag struct {
 	CreatedBy  string `json:"created_by"`
 	ModifiedBy string `json:"modified_by"`
 	State      int    `json:"state"`
+}
+
+// ExistTagByName checks if there is a tag with the same name
+func ExistTagByName(name string) (bool, error) {
+	var tag Tag
+	err := db.Select("id").Where("name = ? AND deleted_on = ?", name, 0).First(&tag).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return false, err
+	}
+
+	if tag.ID > 0 {
+		return true, nil
+	}
+
+	return false, nil
+}
+
+// AddTag Add a Tag
+func AddTag(name string, state int, createdBy string) error {
+	tag := Tag{
+		Name:      name,
+		State:     state,
+		CreatedBy: createdBy,
+	}
+	if err := db.Create(&tag).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // GetTags gets a list of tags based on paging and conditions
@@ -42,36 +70,6 @@ func GetTagTotal(conditions interface{}) (int, error) {
 	}
 
 	return count, nil
-}
-
-// ExistTagByName checks if there is a tag with the same name
-func ExistTagByName(name string) (bool, error) {
-	var tag Tag
-	err := db.Select("id").Where("name = ? AND deleted_on = ?", name, 0).First(&tag).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return false, err
-	}
-
-	if tag.ID > 0 {
-		return true, nil
-	}
-
-	return false, nil
-}
-
-// AddTag Add a Tag
-func AddTag(name string, state int, createdBy string) error {
-	tag := Tag{
-		Name:      name,
-		State:     state,
-		CreatedBy: createdBy,
-	}
-	if err := db.Create(&tag).Error; err != nil {
-		fmt.Println(err)
-		return err
-	}
-
-	return nil
 }
 
 // ExistTagByID determines whether a Tag exists based on the ID

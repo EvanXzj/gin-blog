@@ -32,9 +32,10 @@ func Setup() {
 	))
 
 	if err != nil {
-		log.Println(err)
+		log.Fatalf("models.Setup err: %v", err)
 	}
 
+	// setup table prefix
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
 		return setting.DatabaseSetting.TablePrefix + defaultTableName
 	}
@@ -51,6 +52,8 @@ func Setup() {
 func CloseDB() {
 	defer db.Close()
 }
+
+// Gorm callbacks
 
 // updateTimeStampForCreateCallback will set `CreatedOn`, `ModifiedOn` when creating
 func updateTimeStampForCreateCallback(scope *gorm.Scope) {
@@ -107,6 +110,7 @@ func deleteCallback(scope *gorm.Scope) {
 	}
 }
 
+// addExtraSpaceIfExist adds a separator
 func addExtraSpaceIfExist(str string) string {
 	if str != "" {
 		return " " + str
