@@ -11,7 +11,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	_ "github.com/EvanXzj/gin-blog/docs"
-
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
@@ -19,17 +18,16 @@ import (
 // InitRouter initiate routers
 func InitRouter() *gin.Engine {
 	r := gin.New()
-
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 
 	gin.SetMode(setting.ServerSetting.RunMode)
 
-	// 图片静态文件
+	// 静态文件
 	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
 
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.GET("/auth", api.GetAuth)
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.POST("/upload", api.UploadImage)
 
 	apiv1 := r.Group("/api/v1")

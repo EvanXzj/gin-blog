@@ -26,7 +26,7 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
 // @host host
-// @BasePath /api/v1
+// @BasePath /
 
 func main() {
 	setting.Setup()

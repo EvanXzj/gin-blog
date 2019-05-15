@@ -3,15 +3,13 @@ package api
 import (
 	"net/http"
 
-	"github.com/EvanXzj/gin-blog/pkg/util"
-
-	"github.com/EvanXzj/gin-blog/service/auth_service"
-
-	"github.com/EvanXzj/gin-blog/pkg/app"
-
-	"github.com/EvanXzj/gin-blog/pkg/e"
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
+
+	"github.com/EvanXzj/gin-blog/pkg/app"
+	"github.com/EvanXzj/gin-blog/pkg/e"
+	"github.com/EvanXzj/gin-blog/pkg/util"
+	"github.com/EvanXzj/gin-blog/service/auth_service"
 )
 
 type auth struct {
@@ -25,7 +23,7 @@ type auth struct {
 // @Param username query string true "username"
 // @Param password query string true "password"
 // @Success 200 {object} app.Response
-// @Failure 400 {object} app.Response
+// @Failure 500 {object} app.Response
 // @Router /auth [get]
 func GetAuth(c *gin.Context) {
 	appG := app.Gin{C: c}
