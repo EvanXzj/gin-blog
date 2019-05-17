@@ -3,6 +3,9 @@ package v1
 import (
 	"net/http"
 
+	"github.com/EvanXzj/gin-blog/pkg/qrcode"
+	"github.com/boombuler/barcode/qr"
+
 	"github.com/Unknwon/com"
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
@@ -285,6 +288,23 @@ func DeleteArticle(c *gin.Context) {
 	err = articleService.Delete()
 	if err != nil {
 		appG.Response(http.StatusInternalServerError, e.ERROR_DELETE_ARTICLE_FAIL, nil)
+		return
+	}
+
+	appG.Response(http.StatusOK, e.SUCCESS, nil)
+}
+
+const (
+	QRCODE_URL = "https://github.com/EDDYCJY/blog#gin%E7%B3%BB%E5%88%97%E7%9B%AE%E5%BD%95"
+)
+
+func GeneraterArticlePoster(c *gin.Context) {
+	appG := app.Gin{C: c}
+	qrc := qrcode.NewQrCode(QRCODE_URL, 200, 200, qr.M, qr.Auto)
+	path := qrcode.GetQrCodeFullPath()
+	_, _, err := qrc.Encode(path)
+	if err != nil {
+		appG.Response(http.StatusOK, e.ERROR, nil)
 		return
 	}
 
