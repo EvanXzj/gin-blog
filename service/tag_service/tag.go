@@ -2,8 +2,16 @@ package tag_service
 
 import (
 	"encoding/json"
+	"io"
+	"strconv"
+	"time"
+
+	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/tealeg/xlsx"
 
 	"github.com/EvanXzj/gin-blog/models"
+	"github.com/EvanXzj/gin-blog/pkg/export"
+	"github.com/EvanXzj/gin-blog/pkg/file"
 	"github.com/EvanXzj/gin-blog/pkg/gredis"
 	"github.com/EvanXzj/gin-blog/pkg/logging"
 	"github.com/EvanXzj/gin-blog/service/cache_service"
@@ -63,6 +71,7 @@ func (t *Tag) GetAll() ([]models.Tag, error) {
 		PageSize: t.PageSize,
 	}
 	key := cache.GetTagsKey()
+
 	if gredis.Exists(key) {
 		data, err := gredis.Get(key)
 		if err != nil {
@@ -83,6 +92,87 @@ func (t *Tag) GetAll() ([]models.Tag, error) {
 		logging.Warn("gredis Set error: ", err)
 	}
 	return tags, nil
+}
+
+func (t *Tag) Export() (string, error) {
+	tags, err := t.GetAll()
+	if err != nil {
+		return "", err
+	}
+
+	f := xlsx.NewFile()
+	sheet, err := f.AddSheet("标签信息")
+	if err != nil {
+		return "", err
+	}
+
+	titles := []string{"ID", "名称", "创建人", "创建时间", "修改人", "修改时间"}
+	row := sheet.AddRow()
+
+	var cell *xlsx.Cell
+	for _, title := range titles {
+		cell = row.AddCell()
+		cell.Value = title
+	}
+
+	for _, v := range tags {
+		values := []string{
+			strconv.Itoa(v.ID),
+			v.Name,
+			v.CreatedBy,
+			strconv.Itoa(v.CreatedOn),
+			v.ModifiedBy,
+			strconv.Itoa(v.ModifiedOn),
+		}
+
+		row = sheet.AddRow()
+		for _, value := range values {
+			cell = row.AddCell()
+			cell.Value = value
+		}
+	}
+
+	time := strconv.Itoa(int(time.Now().Unix()))
+	filename := "tags-" + time + export.EXT
+
+	dirFullPath := export.GetExcelFullPath()
+	err = file.IsNotExistMkdir(dirFullPath)
+	if err != nil {
+		return "", err
+	}
+
+	fileFullPath := dirFullPath + filename
+	err = f.Save(fileFullPath)
+	if err != nil {
+		return "", err
+	}
+
+	return filename, nil
+}
+
+func (t *Tag) Import(r io.Reader) error {
+	xlsx, err := excelize.OpenReader(r)
+	if err != nil {
+		return err
+	}
+
+	rows, err := xlsx.GetRows("标签信息")
+	if err != nil {
+		return err
+	}
+
+	for irow, row := range rows {
+		if irow > 0 {
+			var data []string
+			for _, cell := range row {
+				data = append(data, cell)
+			}
+
+			models.AddTag(data[1], 1, data[2])
+		}
+	}
+
+	return nil
 }
 
 func (t *Tag) GetMaps() map[string]interface{} {

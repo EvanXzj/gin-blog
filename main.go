@@ -8,6 +8,7 @@ import (
 	"github.com/fvbock/endless"
 
 	"github.com/EvanXzj/gin-blog/models"
+	"github.com/EvanXzj/gin-blog/pkg/gredis"
 	"github.com/EvanXzj/gin-blog/pkg/logging"
 	"github.com/EvanXzj/gin-blog/pkg/setting"
 	"github.com/EvanXzj/gin-blog/routers"
@@ -32,6 +33,7 @@ func main() {
 	setting.Setup()
 	models.Setup()
 	logging.Setup()
+	gredis.Setup()
 
 	endless.DefaultReadTimeOut = setting.ServerSetting.ReadTimeout
 	endless.DefaultWriteTimeOut = setting.ServerSetting.WriteTimeout
